@@ -1,0 +1,5 @@
+snappydata:
+  host: localhost
+  port: 1527
+  user: snappyadmin
+  password: snappyadmin123
