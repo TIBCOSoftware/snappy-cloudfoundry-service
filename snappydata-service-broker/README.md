@@ -4,7 +4,7 @@ The current implementation of service broker simply returns JDBC connection url 
 
 ## Using the broker
 
-1. You need to have [PCF development environment](http://docs.pivotal.io/tiledev/environments.html#pcfdev) setup.
+1. You need to have PCF installed. For dev purpose, see [PCF development environment](http://docs.pivotal.io/tiledev/environments.html#pcfdev) setup.
 
 2. Clone the service broker code from [GitHub](https://github.com/SnappyDataInc/snappy-cloudfoundry-service).
 

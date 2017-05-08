@@ -9,10 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -41,6 +38,11 @@ public class SnappyDataAdminService {
 	@Value("${snappydata.password:snappyadmin123}")
 	private String password;
 
+	@Value("${snappydata.properties:}")
+	private String properties;
+
+	private Random random = new Random();
+
 	private Connection conn;
 
 	private Map<String, String> bindings = new HashMap<String, String>();
@@ -49,10 +51,18 @@ public class SnappyDataAdminService {
 
 	private static final String ALPHA_NUMERIC_STRING = "01234ABCDEFGHIJKLMNOPQRSTUVWXYZ56789abcdifghijklmnopqrstuvwxyz";
 
-	public void createUser(String bindingId, String newUsername, String newPassword) {
-		// this.executeStatement("CALL SYS.CREATE_USER('" + newUsername + "', '" + newPassword + "')");
+	public String[] createUser(String bindingId) {
+		int random = this.random.nextInt(9999);
+		while (random < 0) {
+			random = this.random.nextInt(9999);
+		}
+		String user = "SNAPPYUSER" + random;
+		String pass = SnappyDataAdminService.randomAlphaNumeric(16);
+
+		// this.executeStatement("CALL SYS.CREATE_USER('" + user + "', '" + pass + "')");
 		// stmt.execute("GRANT EXECUTE ON PROCEDURE SYS.CREATE_ALL_BUCKETS TO " + newUsername);
-		this.bindings.put(bindingId, newUsername);
+		this.bindings.put(bindingId, user);
+		return new String[]{user, pass};
 	}
 
 	public void deleteUser(String bindingId) {
@@ -67,14 +77,14 @@ public class SnappyDataAdminService {
 
 	private void executeStatement(String sql) {
 		try {
-			Class.forName("io.snappydata.jdbc.EmbeddedDriver").newInstance();
+			Class.forName("io.snappydata.jdbc.ClientDriver").newInstance();
 			conn = DriverManager.getConnection(getConnectionString(), user, password);
 			Statement stmt = conn.createStatement();
 			stmt.execute(sql);
 		} catch (SQLException sqle) {
 			logger.warn("Could not get a connection to SnappyData Service", sqle);
 		} catch (Throwable t) {
-			logger.warn("Could not load driver class " + t);
+			logger.warn("Could not load driver class ", t);
 		} finally {
 			if (conn != null) {
 				try {
@@ -110,12 +120,16 @@ public class SnappyDataAdminService {
 	}
 
 	public String getLocatorAddress() {
-		return new StringBuilder(host + ":" + port).toString();
+		return new StringBuilder(this.host + ":" + this.port).toString();
 	}
 
     public String getJobServerUrl() {
-        return new StringBuilder(jobserver + ":" + jobPort).toString();
+        return new StringBuilder(this.jobserver + ":" + this.jobPort).toString();
     }
+
+	public String getProperties() {
+		return this.properties;
+	}
 
     public static String randomAlphaNumeric(int count) {
 		StringBuilder builder = new StringBuilder();

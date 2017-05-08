@@ -21,8 +21,6 @@ public class SnappyDataServiceBindingService implements ServiceInstanceBindingSe
 
     private SnappyDataAdminService adminService;
 
-    private Random random = new Random();
-
     @Autowired
     public SnappyDataServiceBindingService(SnappyDataAdminService adminService) {
         this.adminService = adminService;
@@ -35,16 +33,15 @@ public class SnappyDataServiceBindingService implements ServiceInstanceBindingSe
             throw new ServiceInstanceBindingExistsException(request.getServiceInstanceId(), bindingId);
         }
 
-        String user = "pcfsnappyuser" + this.random.nextInt();
-        String pass = SnappyDataAdminService.randomAlphaNumeric(8);
-        this.adminService.createUser(bindingId, user, pass);
+        String[] userPass = this.adminService.createUser(bindingId);
         this.logger.info("Created service instance binding for " + request.getServiceInstanceId() + ", " + bindingId);
 
         Map<String, Object> cred = new HashMap<String, Object>();
         cred.put("jdbcUrl", this.adminService.getConnectionString());
         cred.put("jobserverUrl", this.adminService.getJobServerUrl());
-        cred.put("user", user);
-        cred.put("password", pass);
+        cred.put("user", userPass[0]);
+        cred.put("password", userPass[1]);
+        cred.put("properties", this.adminService.getProperties());
         return new CreateServiceInstanceAppBindingResponse().withCredentials(cred);
     }
 

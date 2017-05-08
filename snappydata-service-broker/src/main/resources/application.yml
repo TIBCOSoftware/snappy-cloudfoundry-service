@@ -1,5 +1,7 @@
 snappydata:
   host: localhost
   port: 1527
+  jobserver: localhost
+  jobPort: 8090
   user: snappyadmin
   password: snappyadmin123
