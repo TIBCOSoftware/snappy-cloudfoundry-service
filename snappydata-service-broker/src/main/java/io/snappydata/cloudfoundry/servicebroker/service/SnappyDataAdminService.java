@@ -120,14 +120,36 @@ public class SnappyDataAdminService {
 	}
 
 	public String getLocatorAddress() {
+		Map<String, String> map = System.getenv();
+		for (Map.Entry<String, String> e : map.entrySet()) {
+			if ("SNAPPYDATA_LOCATOR_HOST".equalsIgnoreCase(e.getKey())) {
+				this.host = e.getValue();
+			} else if ("SNAPPYDATA_LOCATOR_CLIENT_PORT".equalsIgnoreCase(e.getKey())) {
+				this.port = e.getValue();
+			}
+		}
 		return new StringBuilder(this.host + ":" + this.port).toString();
 	}
 
     public String getJobServerUrl() {
+		Map<String, String> map = System.getenv();
+		for (Map.Entry<String, String> e : map.entrySet()) {
+			if ("SNAPPYDATA_LEAD_HOST".equalsIgnoreCase(e.getKey())) {
+				this.jobserver = e.getValue();
+			} else if ("SNAPPYDATA_JOB_PORT".equalsIgnoreCase(e.getKey())) {
+				this.jobPort = e.getValue();
+			}
+		}
         return new StringBuilder(this.jobserver + ":" + this.jobPort).toString();
     }
 
 	public String getProperties() {
+		Map<String, String> map = System.getenv();
+		for (Map.Entry<String, String> e : map.entrySet()) {
+			if ("SNAPPYDATA_CONNECTION_PROPS".equalsIgnoreCase(e.getKey())) {
+				this.properties = e.getValue();
+			}
+		}
 		return this.properties;
 	}
 

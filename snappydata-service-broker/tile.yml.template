@@ -66,11 +66,16 @@ forms:
     default: 'localhost'
     label: snappydata-service hostname
     description: Name of the host where locator instance is running.
-  - name: snappydata_locator_port
+  - name: snappydata_locator_client_port
     type: integer
     default: 1527
     label: snappydata-service port
     description: The port where locator instance is listening for client connections.
+  - name: snappydata_connection_props
+    type: string
+    default: ''
+    label: snappydata-service properties
+    description: The properties to be passed when connecting to SnappyData cluster.
 
 # Add any dependencies your tile has on other installed products.
 # This is often appropriate when using automatic service provisioning

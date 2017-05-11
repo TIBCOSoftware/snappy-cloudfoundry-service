@@ -50,7 +50,8 @@ The current implementation of service broker simply returns JDBC connection url 
             "jdbcUrl": "jdbc:snappydata://localhost:1527",
             "jobserverUrl": "localhost:8090",
             "password": "password",
-            "user": "pcfsnappyuser383112049"
+            "properties": "load-balance=true;log-file=snappydataclient.log",
+            "user": "SNAPPYUSER4259"
            },
            "label": "SnappyData",
            "name": "snappy-service",
