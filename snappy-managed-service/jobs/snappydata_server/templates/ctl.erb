@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e -x
+
+export JAVA_HOME=/var/vcap/packages/jdk/jdk1.8.0_131
+export PATH=$JAVA_HOME/bin:$PATH
+
+echo "Copying the product dir to /var/vcap/data/ ..."
+tar -C /var/vcap/data/ -zxf /var/vcap/packages/snappydata/snappydata-0.8-bin.tar.gz
+
+<% 
+for @instance in link('locator').instances %>
+export LOCATOR_HOSTS="${LOCATOR_HOSTS},<%= @instance.address %>:10334"
+<% end %>
+
+export LOCATOR_HOSTS=${LOCATOR_HOSTS:1}
+
+export PRODUCT_DIR=/var/vcap/data/snappydata-0.8-bin
+export LOCATOR_HOST="<%= link('locator').instances[0].address %>"
+export SERVER_HOST="<%= spec.address %>"
+
+echo "Locator hosts: ${LOCATOR_HOSTS}, server host: ${SERVER_HOST}" >> ${PRODUCT_DIR}/status.log
+
+mkdir -p ${PRODUCT_DIR}/work/server
+
+echo "Starting server ..." >> ${PRODUCT_DIR}/status.log
+
+case $1 in
+
+  start)
+    ${PRODUCT_DIR}/bin/snappy server start -bind-address=${SERVER_HOST} -locators=${LOCATOR_HOSTS} -J-Dgemfirexd.hostname-for-clients=${SERVER_HOST} -dir=${PRODUCT_DIR}/work/server >> ${PRODUCT_DIR}/status.log
+
+  ;;
+
+  stop)
+    ${PRODUCT_DIR}/bin/snappy server stop -dir=${PRODUCT_DIR}/work/server >> ${PRODUCT_DIR}/status.log
+
+  ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac
+

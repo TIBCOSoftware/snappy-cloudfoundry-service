@@ -1,0 +1,27 @@
+---
+name: snappydata_lead
+
+provides:
+- name: lead
+  type: ldconn
+
+consumes:
+- name: locator
+  type: locconn
+- name: lead
+  type: ldconn
+
+templates:
+  ctl.erb: bin/ctl
+
+packages:
+- jdk
+- snappydata
+
+properties:
+  snappydata_locator_host:
+    description: Name of the host where locator instance is running.
+  snappydata_locator_client_port:
+    description: The port where locator instance is listening for client connections.
+  snappydata_connection_props:
+    description: The properties to be passed when connecting to SnappyData cluster.

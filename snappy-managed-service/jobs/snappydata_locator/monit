@@ -1,0 +1,6 @@
+check process snappydata_locator
+  with pidfile /var/vcap/data/snappydata-0.8-bin/work/locator/snappylocator.pid
+  start program "/var/vcap/jobs/snappydata_locator/bin/ctl start"   with timeout 60 seconds
+  stop program "/var/vcap/jobs/snappydata_locator/bin/ctl stop"    with timeout 60 seconds
+  group vcap
+

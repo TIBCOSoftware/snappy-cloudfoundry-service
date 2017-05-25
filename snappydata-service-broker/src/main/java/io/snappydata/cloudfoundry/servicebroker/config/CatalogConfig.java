@@ -48,18 +48,17 @@ public class CatalogConfig {
         return sdMetadata;
     }
 
-    private Map<String,Object> getPlanMetadata() {
+    private Map<String, Object> getPlanMetadata() {
         Map<String, Object> planMetadata = new HashMap();
         planMetadata.put("costs", getCosts());
         planMetadata.put("bullets", getBullets());
         return planMetadata;
     }
 
-    private List<Map<String,Object>> getCosts()
-    {
-        Map<String,Object> costsMap = new HashMap();
+    private List<Map<String, Object>> getCosts() {
+        Map<String, Object> costsMap = new HashMap();
 
-        Map<String,Object> amount = new HashMap();
+        Map<String, Object> amount = new HashMap();
         amount.put("usd", 0.0);
 
         costsMap.put("amount", amount);

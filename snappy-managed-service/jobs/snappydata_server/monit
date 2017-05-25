@@ -1,0 +1,6 @@
+check process snappydata_server
+  with pidfile /var/vcap/data/snappydata-0.8-bin/work/server/snappyserver.pid
+  start program "/var/vcap/jobs/snappydata_server/bin/ctl start"   with timeout 120 seconds
+  stop program "/var/vcap/jobs/snappydata_server/bin/ctl stop"    with timeout 120 seconds
+  group vcap
+

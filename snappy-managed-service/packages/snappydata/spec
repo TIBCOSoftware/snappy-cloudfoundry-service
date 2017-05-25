@@ -1,0 +1,7 @@
+---
+name: snappydata
+
+dependencies:
+
+files:
+  - snappydata/snappydata-0.8-bin.tar.gz
