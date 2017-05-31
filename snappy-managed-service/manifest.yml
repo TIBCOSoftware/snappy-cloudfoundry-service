@@ -37,25 +37,31 @@ jobs:
 - name: snappydata_locator
   templates:
   - name: snappydata_locator
-  instances: 2
+  instances: 1
   resource_pool: default
   networks:
   - name: default
-  properties: {}
+  properties:
+    snappydata:
+# e.g. '-log-file=locator.log'
+      locator_options: ''
 - name: snappydata_server
   templates:
   - name: snappydata_server
-  instances: 2
+  instances: 1
   resource_pool: default
   networks:
   - name: default
-  properties: {}
+  properties:
+    snappydata:
+      server_options: ''
 - name: snappydata_lead
   templates:
   - name: snappydata_lead
-  instances: 2
+  instances: 1
   resource_pool: default
   networks:
   - name: default
-  properties: {}
-
+  properties:
+    snappydata:
+      lead_options: ''

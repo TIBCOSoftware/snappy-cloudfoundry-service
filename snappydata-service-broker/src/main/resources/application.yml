@@ -5,3 +5,4 @@ snappydata:
   jobPort: 8090
   user: snappyadmin
   password: snappyadmin123
+  properties: 

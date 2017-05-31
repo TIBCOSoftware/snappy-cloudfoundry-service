@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -x
 
-export JAVA_HOME=/var/vcap/packages/jdk/jdk1.8.0_131
+export JAVA_HOME=/var/vcap/packages/jre/jre1.8.0_131
 export PATH=$JAVA_HOME/bin:$PATH
 
 echo "Copying the product dir to /var/vcap/data/ ..."
@@ -20,13 +20,18 @@ export LEAD_HOST="<%= spec.address %>"
 
 mkdir -p ${PRODUCT_DIR}/work/lead
 
+export STARTUP_OPTIONS="<%= properties.snappydata.lead_options %>"
+echo "Start up options: ${STARTUP_OPTIONS}" >> ${PRODUCT_DIR}/status.log
+
 echo "Locator hosts: ${LOCATOR_HOSTS}" >> ${PRODUCT_DIR}/status.log
 echo "Starting lead ..." >> ${PRODUCT_DIR}/status.log
+
+# TODO Clean up STARTUP_OPTIONS
 
 case $1 in
 
   start)
-    ${PRODUCT_DIR}/bin/snappy leader start -bind-address=${LEAD_HOST} -locators=${LOCATOR_HOSTS}:10334 -dir=${PRODUCT_DIR}/work/lead >> ${PRODUCT_DIR}/status.log
+    ${PRODUCT_DIR}/bin/snappy leader start -bind-address=${LEAD_HOST} -locators=${LOCATOR_HOSTS} -dir=${PRODUCT_DIR}/work/lead ${STARTUP_OPTIONS} >> ${PRODUCT_DIR}/status.log
 
   ;;
 

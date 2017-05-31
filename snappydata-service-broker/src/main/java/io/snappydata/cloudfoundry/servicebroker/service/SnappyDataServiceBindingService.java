@@ -38,7 +38,9 @@ public class SnappyDataServiceBindingService implements ServiceInstanceBindingSe
 
         Map<String, Object> cred = new HashMap<String, Object>();
         cred.put("jdbcUrl", this.adminService.getConnectionString());
-        cred.put("jobserverUrl", this.adminService.getJobServerUrl());
+        cred.put("jobserverUrl", this.adminService.getFirstLead());
+        cred.put("locatorList", this.adminService.getLocators());
+        cred.put("leadList", this.adminService.getLeads());
         cred.put("user", userPass[0]);
         cred.put("password", userPass[1]);
         cred.put("properties", this.adminService.getProperties());

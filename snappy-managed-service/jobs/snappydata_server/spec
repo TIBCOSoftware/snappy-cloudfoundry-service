@@ -16,14 +16,14 @@ templates:
   ctl.erb: bin/ctl
 
 packages:
-- jdk
+- jre
 - snappydata
 
 properties:
-  snappydata_locator_host:
-    description: Name of the host where locator instance is running.
-  snappydata_locator_client_port:
-    description: The port where locator instance is listening for client connections.
-  snappydata_connection_props:
-    description: The properties to be passed when connecting to SnappyData cluster.
-                        
+  snappydata.server_options:
+    description: The start up options for server instances.
+  snappydata.admin_username:
+    description: The user with admin rights.
+  snappydata.admin_user_pass:
+    description: The credentials for the admin user.
+                

@@ -51,6 +51,27 @@ public class SnappyDataAdminService {
 
     private static final String ALPHA_NUMERIC_STRING = "01234ABCDEFGHIJKLMNOPQRSTUVWXYZ56789abcdifghijklmnopqrstuvwxyz";
 
+    // Environment variables for managed service
+    private static final String MANAGED_LOCATOR = "SNAPPYDATA_SERVICE_SNAPPYDATA_LOCATOR_HOST";
+
+    private static final String MANAGED_LOCATORS = MANAGED_LOCATOR + "S";
+
+    private static final String MANAGED_LEAD = "SNAPPYDATA_SERVICE_SNAPPYDATA_LEAD_HOST";
+
+    private static final String MANAGED_LEADS = MANAGED_LEAD + "S";
+
+    // Environment variables for brokered service
+    private static final String EXTERNAL_LOCATOR = "SNAPPYDATA_LOCATOR_HOST";
+
+    private static final String EXTERNAL_LOCATOR_PORT = "SNAPPYDATA_LOCATOR_CLIENT_PORT";
+
+    private static final String EXTERNAL_LEAD = "SNAPPYDATA_LEAD_HOST";
+
+    private static final String EXTERNAL_LEAD_PORT = "SNAPPYDATA_JOB_PORT";
+
+    // Common
+    private static final String CONN_PROPS = "SNAPPYDATA_CONNECTION_PROPS";
+
     public String[] createUser(String bindingId) {
         int random = this.random.nextInt(9999);
         while (random < 0) {
@@ -115,13 +136,16 @@ public class SnappyDataAdminService {
     public String getConnectionString() {
         return new StringBuilder()
                 .append("jdbc:snappydata://")
-                .append(getLocatorAddress())
+                .append(getFirstLocator())
                 .toString();
     }
 
-    public String getLocatorAddress() {
-        String host = System.getenv("SNAPPYDATA_LOCATOR_HOST");
-        String port = System.getenv("SNAPPYDATA_LOCATOR_CLIENT_PORT");
+    public String getFirstLocator() {
+        String host = System.getenv(MANAGED_LOCATOR);
+        if (host == null || host.isEmpty()) {
+            host = System.getenv(EXTERNAL_LOCATOR);
+        }
+        String port = System.getenv(EXTERNAL_LOCATOR_PORT);
 
         if (host != null && !host.isEmpty()) {
             this.host = host;
@@ -132,9 +156,12 @@ public class SnappyDataAdminService {
         return new StringBuilder(this.host + ":" + this.port).toString();
     }
 
-    public String getJobServerUrl() {
-        String host = System.getenv("SNAPPYDATA_LEAD_HOST");
-        String port = System.getenv("SNAPPYDATA_JOB_PORT");
+    public String getFirstLead() {
+        String host = System.getenv(MANAGED_LEAD);
+        if (host == null || host.isEmpty()) {
+            host = System.getenv(EXTERNAL_LEAD);
+        }
+        String port = System.getenv(EXTERNAL_LEAD_PORT);
 
         if (host != null && !host.isEmpty()) {
             this.jobserver = host;
@@ -145,8 +172,69 @@ public class SnappyDataAdminService {
         return new StringBuilder(this.jobserver + ":" + this.jobPort).toString();
     }
 
+    public String getLocators() {
+        String host = buildLocatorAddresses(10334);
+        if (host != null && !host.isEmpty()) {
+            return host;
+        }
+        host = System.getenv(EXTERNAL_LOCATOR);
+        String port = System.getenv(EXTERNAL_LOCATOR_PORT);
+
+        if (host != null && !host.isEmpty()) {
+            this.host = host;
+        }
+        if (port != null && !port.isEmpty()) {
+            this.port = port;
+        }
+        return new StringBuilder(this.host + ":" + this.port).toString();
+    }
+
+    public String getLeads() {
+        String host = buildLeadAddresses(8090);
+        if (host != null && !host.isEmpty()) {
+            return host;
+        }
+        host = System.getenv(EXTERNAL_LEAD);
+        String port = System.getenv(EXTERNAL_LEAD_PORT);
+
+        if (host != null && !host.isEmpty()) {
+            this.jobserver = host;
+        }
+        if (port != null && !port.isEmpty()) {
+            this.jobPort = port;
+        }
+        return new StringBuilder(this.jobserver + ":" + this.jobPort).toString();
+    }
+
+    private String buildLocatorAddresses(int port) {
+        return buildProcessAddresses(MANAGED_LOCATORS, port);
+    }
+
+    private String buildLeadAddresses(int port) {
+        return buildProcessAddresses(MANAGED_LEADS, port);
+    }
+
+    private String buildProcessAddresses(String env, int port) {
+        // Build a semicolon delimited string
+        // e.g. From ["192.168.1.11", "192.168.1.22"] to "192.168.1.11:10334,192.168.1.22:10334"
+        StringBuilder sb = new StringBuilder("");
+        String hosts = System.getenv(env);
+        if (hosts != null && !hosts.isEmpty()) {
+            // Create a tokenizer after removing the enclosing square '[' brackets
+            StringTokenizer st = new StringTokenizer(hosts.substring(1, hosts.length() - 1), ",");
+            while (st.hasMoreTokens()) {
+                // Delimit with comma ','
+                sb.append(sb.toString().isEmpty() ? "" : ",");
+                String s = st.nextToken().trim();
+                // Remove enclosing double quotes and append port
+                sb.append(s.substring(1, s.length() - 1) + ":" + port);
+            }
+        }
+        return sb.toString();
+    }
+
     public String getProperties() {
-        String props = System.getenv("SNAPPYDATA_CONNECTION_PROPS");
+        String props = System.getenv(CONN_PROPS);
         if (props != null) {
             this.properties = props;
         }
