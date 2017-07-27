@@ -1,5 +1,5 @@
 # SnappyData Pivotal CloudFoundry Services
-SnappyData offers both a brokered service and a managed service for Pivotal CloudFoundry. These offerings provide multiple options to customers who may in various stages of PCF adoption within their enterprise. In the next two sections, we provide more details on the two service offerings for PCF customers.
+SnappyData offers both a brokered service and a managed service for Pivotal CloudFoundry. These offerings provide multiple options to customers depending on their stage of PCF adoption within their enterprise. In the next two sections, we provide more details on the two service offerings for PCF customers.
 
 
 ## Brokered service
