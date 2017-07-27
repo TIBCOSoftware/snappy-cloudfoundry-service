@@ -1,13 +1,12 @@
-# Service Broker
+# SnappyData Pivotal CloudFoundry Services
+SnappyData offers both a brokered service and a managed service for Pivotal CloudFoundry. These offerings provide multiple options to customers who may in various stages of PCF adoption within their enterprise. In the next two sections, we provide more details on the two service offerings for PCF customers.
 
-The current implementation of service broker simply returns JDBC connection url and list of locators and leads of the SnappyData cluster.
 
 ## Brokered service
 
-In this case, the SnappyData cluster is running outside the Cloud Foundry and your apps within Cloud Foundry can connect
- to it using the service broker. You need to provide your cluster details to the broker. No BOSH release is required here.
+When using the brokered service, the SnappyData cluster is running outside PCF and customer apps within Cloud Foundry can connect to it using the service broker. The user needs to provide SnappyData cluster details to the broker. No BOSH release is required here.
 
-Also, you need to have Cloud Foundry installed. For dev purpose, see [PCF development environment](http://docs.pivotal.io/tiledev/environments.html#pcfdev) setup.
+To use the brokered service, users need to have Cloud Foundry installed. For more details, see [PCF development environment](http://docs.pivotal.io/tiledev/environments.html#pcfdev) setup.
 The instructions below have been tried with PCF Dev setup.
 
 * Clone the service broker code from [GitHub](https://github.com/SnappyDataInc/snappy-cloudfoundry-service).
@@ -76,7 +75,7 @@ The instructions below have been tried with PCF Dev setup.
 
 #### Deploy broker via tile
 
-Above, we saw how to manually push broker as an app to Cloud Foundry via CLI and register it as broker. If you have PCF setup with Ops Manager, you can also deploy the broker via a tile.
+In the previous section, we saw how to manually push the broker as an app to Cloud Foundry via CLI and register it as broker. If you have PCF setup with Ops Manager, you can also deploy the broker via a tile.
 
 Simply refer the build jar as a `app-broker` package in tile.yml and generate the tile artifact to be uploaded to Ops Manager.
  
@@ -98,15 +97,15 @@ Simply refer the build jar as a `app-broker` package in tile.yml and generate th
  
 ## Managed Service
 
-With Brokered Service, we had to run and manage the SnappyData cluster outside the Cloud Foundry.
+A brokered service requires users to manage and run the SnappyData cluster outside PCF. Increasingly we find that customers prefer that PCF take over lifecycle management of the services in order to keep it consistent with everything else they run inside PCF. A managed service allows users to do exactly that.
 
-But you can also deploy SnappyData cluster as a managed service i.e. a service run and managed within the Cloud Foundry and enable apps connect to it via this broker.
+Users can deploy a SnappyData cluster as a managed service i.e. a service run and managed within Cloud Foundry that allows apps to connect to it via this broker.
 
-While the service broker does not change, the SnappyData cluster, though, needs to be deployed as a BOSH release. 
+While the service broker itself remains the same, the SnappyData cluster, however needs to be deployed as a BOSH release. 
 
 Refer to this [readme](../snappy-managed-service/README.md) for more details on how to create the BOSH release. Then, add the BOSH release as one of the `packages` in your tile.yml with `type` as `bosh-release`. A sample [tile.yml](tile.yml.managed) is provided.
 
-Once the tile is uploaded and successfully installed, it'll launch the SnappyData cluster as well as register the broker on PCF.
+Once the tile is uploaded and successfully installed, it will launch the SnappyData cluster as well as register the broker on PCF.
 
 You'll need to create a service instance using CLI and bind it to your app (this will be automated soon).
 
