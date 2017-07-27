@@ -4,7 +4,7 @@ SnappyData offers both a brokered service and a managed service for Pivotal Clou
 
 ## Brokered service
 
-When using the brokered service, the SnappyData cluster is running outside PCF and customer apps within Cloud Foundry can connect to it using the service broker. The user needs to provide SnappyData cluster details to the broker. No BOSH release is required here.
+When using the brokered service, the SnappyData cluster runs outside PCF. Customer apps within Cloud Foundry can connect to it using the service broker. The user needs to provide SnappyData cluster details to the broker. No BOSH release is required here.
 
 To use the brokered service, users need to have Cloud Foundry installed. For more details, see [PCF development environment](http://docs.pivotal.io/tiledev/environments.html#pcfdev) setup.
 The instructions below have been tried with PCF Dev setup.
