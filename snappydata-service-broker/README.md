@@ -111,4 +111,5 @@ You'll need to create a service instance using CLI and bind it to your app (this
 
 ## Roadmap
 
-* Update the service broker when security is fully supported in SnappyData.
+* Update the service broker to support SnappyData security.
+* Add support for a new on demand broker
